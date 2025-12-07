@@ -8,11 +8,6 @@ local Files = {
     'gui/gui.lua',
 }
 
-local RemoteHash = game:HttpGet(Repo .. "version.txt")
-local HashPath = 'ryx.wtf/version.txt'
-local LocalHash = isfile(HashPath) and readfile(HashPath) or ""
-local Outdated = LocalHash ~= RemoteHash
-
 if not isfolder('ryx.wtf') then
     makefolder('ryx.wtf')
 end
@@ -25,12 +20,13 @@ for _, v in ipairs(Files) do
         makefolder(Dir)
     end
 
-    if Outdated or not isfile(Path) then
-        writefile(Path, game:HttpGet(Repo .. v))
+    local Remote = game:HttpGet(Repo .. v)
+    local Local = isfile(Path) and readfile(Path) or nil
+
+    if Local ~= Remote then
+        writefile(Path, Remote)
     end
 end
-
-writefile(HashPath, RemoteHash)
 
 local GamePath = 'ryx.wtf/games/' .. Id .. '.lua'
 if isfile(GamePath) then
