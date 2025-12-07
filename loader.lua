@@ -8,6 +8,11 @@ local Files = {
     'gui/gui.lua',
 }
 
+local RemoteHash = game:HttpGet(Repo .. "version.txt")
+local HashPath = 'ryx.wtf/version.txt'
+local LocalHash = isfile(HashPath) and readfile(HashPath) or ""
+local Outdated = LocalHash ~= RemoteHash
+
 if not isfolder('ryx.wtf') then
     makefolder('ryx.wtf')
 end
@@ -20,14 +25,16 @@ for _, v in ipairs(Files) do
         makefolder(Dir)
     end
 
-    if not isfile(Path) then
+    if Outdated or not isfile(Path) then
         writefile(Path, game:HttpGet(Repo .. v))
     end
 end
 
-local Path = 'ryx.wtf/games/' .. Id .. '.lua'
-if isfile(Path) then
-    loadfile(Path)()
+writefile(HashPath, RemoteHash)
+
+local GamePath = 'ryx.wtf/games/' .. Id .. '.lua'
+if isfile(GamePath) then
+    loadfile(GamePath)()
 else
-    warn('[warn] -> game script missing: ' .. Path)
+    warn('[warn] -> game script missing: ' .. GamePath)
 end

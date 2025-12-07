@@ -68,16 +68,15 @@ local Main = Window:AddTab("Main")
 Window:SelectTab()
 
 local MainSection = Main:AddSection({
-    Title = "Section Name",
-    Description = "Description",
-    Defualt = false ,
+    Title = "Mining",
+    Description = "",
+    Defualt = true,
     Locked = false
 })
 
-MainSection:AddToggle("ConfigToStoreName", {
-    Title = "Auti Mine",
+MainSection:AddToggle("automine", {
+    Title = "Auto Mine",
     Default = false,
-    Description = "lol",
     Callback = function(v)
         vars.automine = v
     end,
