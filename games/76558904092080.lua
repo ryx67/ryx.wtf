@@ -4,6 +4,9 @@ local runService = cloneref(game:GetService('RunService'))
 local tweenService = cloneref(game:GetService('TweenService'))
 local debrisService = cloneref(game:GetService('Debris'))
 
+local Library = loadfile('ryx.wtf/gui/gui.lua')()
+local Config = loadfile('ryx.wtf/gui/config.lua')()
+
 local lplr = playersService.LocalPlayer
 
 local vars = {
@@ -55,10 +58,40 @@ local function getRocks(Name)
 	end
 end
 
+local Window = Library:Load({
+      Title = 'ryx.wtf - 🎄Christmas',
+      ToggleButton = "",
+	  BindGui = Enum.KeyCode.RightControl,
+})
+
+local Main = Window:AddTab("Main")
+Window:SelectTab()
+
+local MainSection = Main:AddSection({
+    Title = "Section Name",
+    Description = "Description",
+    Defualt = false ,
+    Locked = false
+})
+
+MainSection:AddToggle("ConfigToStoreName", {
+    Title = "Auti Mine",
+    Default = false,
+    Description = "lol",
+    Callback = function(v)
+        vars.automine = v
+    end,
+})
+
+local Configs = Window:AddTab("Config")
+Config:SetLibrary(Library)
+Config:SetIgnoreIndexes({})
+Config:SetFolder("ryx.wtf/configs/the forge")
+Config:InitSaveSystem(Configs)
 
 while task.wait() do
     local Slave = getRocks('Pebble')
-    if Slave then
+    if Slave and vars.automine then
         tweenTo(getRocks('Pebble').Position)
         replicatedStorage.Shared.Packages.Knit.Services.ToolService.RF.ToolActivated:InvokeServer('Pickaxe')
         Noclip()
