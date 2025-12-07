@@ -12,22 +12,22 @@ if not isfolder('ryx.wtf') then
     makefolder('ryx.wtf')
 end
 
-for _, File in ipairs(Files) do
-    local Path = 'ryx.wtf/' .. File
-    local Dir = 'ryx.wtf/' .. (File:match("(.*/)") or "")
+for _, v in ipairs(Files) do
+    local Path = 'ryx.wtf/' .. v
+    local Dir = 'ryx.wtf/' .. (v:match("(.*/)") or "")
 
     if not isfolder(Dir) then
         makefolder(Dir)
     end
 
     if not isfile(Path) then
-        writefile(Path, game:HttpGet(Repo .. File))
+        writefile(Path, game:HttpGet(Repo .. v))
     end
 end
 
-local GamePath = 'ryx.wtf/games/' .. Id .. '.lua'
-if isfile(GamePath) then
-    loadfile(GamePath)()
+local Path = 'ryx.wtf/games/' .. Id .. '.lua'
+if isfile(Path) then
+    loadfile(Path)()
 else
-    warn('game script missing: ' .. GamePath)
+    warn('[warn] -> game script missing: ' .. Path)
 end
