@@ -7,7 +7,7 @@ local debrisService = cloneref(game:GetService('Debris'))
 local lplr = playersService.LocalPlayer
 
 local vars = {
-    tweenspeed = 55,
+    tweenspeed = 55
 }
 
 local function tweenTo(Position)
@@ -47,10 +47,7 @@ local function getRocks(Name)
 end
 
 while task.wait() do
-Noclip()
-tweenTo(getRocks('Pebble').PrimaryPart.Position)
-replicatedStorage.Shared.Packages.Knit.Services.ToolService.RF.ToolActivated:InvokeServer('Pickaxe')
+    tweenTo(getRocks('Pebble').PrimaryPart.Position)
+    replicatedStorage.Shared.Packages.Knit.Services.ToolService.RF.ToolActivated:InvokeServer('Pickaxe')
+    Noclip()
 end
-
-$ 
-$ git config --global user.email rtho49401@gmail.com
