@@ -11,6 +11,13 @@ local vars = {
     automine = true,
 }
 
+local npcs = {}
+for i, v in pairs(workspace.Proximity:GetChildren()) do
+    if v:FindFirstChildOfClass('Humanoid') then
+        table.insert(npcs, v)
+    end
+end
+
 local function tweenTo(Position)
     local Root = lplr.Character.HumanoidRootPart
     local Pos = Vector3.new(Position.X, Position.Y, Position.Z)
