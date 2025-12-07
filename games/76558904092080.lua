@@ -89,8 +89,8 @@ Config:SetFolder("ryx.wtf/configs/the forge")
 Config:InitSaveSystem(Configs)
 
 while task.wait() do
-    local Slave = getRocks('Pebble')
-    if Slave and vars.automine then
+    local Candidates = getRocks('Pebble')
+    if Candidates and vars.automine then
         tweenTo(getRocks('Pebble').Position)
         replicatedStorage.Shared.Packages.Knit.Services.ToolService.RF.ToolActivated:InvokeServer('Pickaxe')
         Noclip()
