@@ -1,26 +1,33 @@
-local repo = 'https://raw.githubusercontent.com/ryx67/ryx.wtf/refs/heads/main/'
-local id = game.PlaceId
+local Repo = 'https://raw.githubusercontent.com/ryx67/ryx.wtf/refs/heads/main/'
+local Id = game.PlaceId
 
-local files = {
+local Files = {
     'loader.lua',
-    'games/theforge.lua',
+    'games/76558904092080.lua',
     'gui/config.lua',
     'gui/gui.lua',
 }
 
-for i, v in pairs(files) do
-    if not isfolder('ryx.wtf') then
-        makefolder('ryx.wtf')
+if not isfolder('ryx.wtf') then
+    makefolder('ryx.wtf')
+end
+
+for _, File in ipairs(Files) do
+    local Path = 'ryx.wtf/' .. File
+    local Dir = 'ryx.wtf/' .. (File:match("(.*/)") or "")
+
+    if not isfolder(Dir) then
+        makefolder(Dir)
     end
 
-    if not isfile('ryx.wtf/' .. v) then
-        local dir = 'ryx.wtf/' .. v:match("(.*/)")
-        if not isfolder(dir) then
-            makefolder(dir)
-        end
-
-        writefile('ryx.wtf/' .. v, game:HttpGet(repo .. v))
+    if not isfile(Path) then
+        writefile(Path, game:HttpGet(Repo .. File))
     end
+end
 
-    loadfile('ryx.wtf/games/' .. id .. '.lua')()
+local GamePath = 'ryx.wtf/games/' .. Id .. '.lua'
+if isfile(GamePath) then
+    loadfile(GamePath)()
+else
+    warn('game script missing: ' .. GamePath)
 end
