@@ -214,7 +214,7 @@ end
 
 groups.forge:CreateDivider()
 groups.forge:CreateButton({
-        Name = 'Forge',
+        Name = 'Forging Station',
         Icon = Icons:GetIcon('circle-arrow-right', 'Lucide'),
         Style = 1,
         Callback = function()
@@ -252,7 +252,7 @@ for i, v in ipairs(shops) do
 }, 'INDEX')
 
 groups.globals:CreateLabel({
-    Name = 'Info -> 90/91 is RECOMMENDED',
+    Name = '-> 90/91 is RECOMMENDED',
     Icon = Icons:GetIcon('info', 'Material'),
 }, 'INDEX')
 
