@@ -4,8 +4,8 @@ local runService = cloneref(game:GetService('RunService'))
 local tweenService = cloneref(game:GetService('TweenService'))
 local debrisService = cloneref(game:GetService('Debris'))
 
-local Library = loadfile('ryx.wtf/gui/gui.lua')()
-local Config = loadfile('ryx.wtf/gui/config.lua')()
+local Library = loadstring(game:HttpGet('https://raw.githubusercontent.com/ryx67/ryx.wtf/main/dependencies/library.lua'))()
+local Config = loadstring(game:HttpGet('https://raw.githubusercontent.com/ryx67/ryx.wtf/main/dependencies/config.lua'))()
 
 local lplr = playersService.LocalPlayer
 
