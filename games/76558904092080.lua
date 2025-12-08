@@ -172,6 +172,7 @@ local groups = {
     }, 'INDEX')
 }
 
+groups.mining:CreateDivider()
 local automine = groups.mining:CreateToggle({
     Name = 'Auto attack ores',
     CurrentValue = false,
@@ -190,6 +191,7 @@ local rocks = automine:AddDropdown({
     end,
 }, 'INDEX')
 
+groups.npc:CreateDivider()
 for i, v in ipairs(npcnames) do
     groups.npc:CreateButton({
         Name = v,
@@ -210,6 +212,7 @@ for i, v in ipairs(npcnames) do
     }, 'INDEX')
 end
 
+groups.forge:CreateDivider()
 groups.forge:CreateButton({
         Name = 'Forge',
         Icon = Icons:GetIcon('circle-arrow-right', 'Lucide'),
@@ -222,6 +225,7 @@ groups.forge:CreateButton({
         end,
 }, 'INDEX')
 
+groups.shop:CreateDivider()
 for i, v in ipairs(shops) do
     if v.Name ~= 'Forging Station' and v.Name ~= 'Model' then
            groups.shop:CreateButton({
@@ -235,6 +239,7 @@ for i, v in ipairs(shops) do
     end
  end
 
+ groups.globals:CreateDivider()
  local tweenspeed = groups.globals:CreateSlider({
     Name = 'Tween speed',
     Icon = Icons:GetIcon('speed', 'Material'),
@@ -250,8 +255,6 @@ groups.globals:CreateLabel({
     Name = 'Info -> 90/91 is RECOMMENDED',
     Icon = Icons:GetIcon('info', 'Material'),
 }, 'INDEX')
-
-groups.globals:CreateDivider()
 
 local noclip = groups.globals:CreateToggle({
     Name = 'Noclip when tweening',
