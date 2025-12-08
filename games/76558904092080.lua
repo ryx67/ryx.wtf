@@ -4,8 +4,9 @@ local runService = cloneref(game:GetService('RunService'))
 local tweenService = cloneref(game:GetService('TweenService'))
 local debrisService = cloneref(game:GetService('Debris'))
 
-local Library = loadstring(game:HttpGet('https://raw.githubusercontent.com/ryx67/ryx.wtf/refs/heads/main/depencies/gui.lua'))()
-local Config = loadstring(game:HttpGet('https://raw.githubusercontent.com/ryx67/ryx.wtf/refs/heads/main/dependencies/config.lua'))()
+getgenv().SecureMode = true
+local Library = loadstring(game:HttpGet("https://raw.nebulasoftworks.xyz/starlight"))()  
+local Icons = loadstring(game:HttpGet("https://raw.nebulasoftworks.xyz/nebula-icon-library-loader"))()
 
 local lplr = playersService.LocalPlayer
 
@@ -58,35 +59,80 @@ local function getRocks(Name)
 	end
 end
 
-local Window = Library:Load({
-      Title = 'ryx.wtf - 🎄Christmas',
-      ToggleButton = "",
-	  BindGui = Enum.KeyCode.RightControl,
+local Window = Library:CreateWindow({
+    Name = "ryx.wtf - The Forge",
+    Subtitle = "v1.0",
+    Icon = 124905402582719,
+    InterfaceAdvertisingPrompts = false,
+
+    LoadingSettings = {
+        Title = "My Script Hub",
+        Subtitle = "Welcome to My Script Hub",
+    },
+
+    FileSettings = {
+        ConfigFolder = "MyScript"
+    },
 })
 
-local Main = Window:AddTab("Main")
-Window:SelectTab()
-
-local MainSection = Main:AddSection({
-    Title = "Mining",
-    Description = "",
-    Defualt = true,
-    Locked = false
+Window:CreateHomeTab({
+    SupportedExecutors = {'Ronix', 'Delta', 'Codex', 'Xeno', 'Solara'}, 
+    UnsupportedExecutors = {},
+    DiscordInvite = "1234",
+    Backdrop = nil,
+    IconStyle = 1, 
+    Changelog = {
+        {
+            Title = "Example Update",
+            Date = "25th october twentyfive",
+            Description = "blablblablajana \n blabakjakd",
+        }
+    }
 })
 
-MainSection:AddToggle("automine", {
-    Title = "Auto Mine",
-    Default = false,
-    Callback = function(v)
-        vars.automine = v
+local sections = {
+    farm = Window:CreateTabSection("Farming"),
+    settings = Window:CreateTabSection("Settings")
+}
+
+local tabs = {
+    mine = sections.farm:CreateTab({
+        Name = "Mine",
+        Icon = Icons:GetIcon('pickaxe', 'Lucide'),
+        Columns = 2,
+    }, "INDEX"),
+
+    theme = sections.settings:CreateTab({
+        Name = "Theme",
+        Icon = Icons:GetIcon('palette', 'Lucide'),
+        Columns = 2,
+    }, "INDEX"),
+
+    config = sections.settings:CreateTab({
+        Name = "Config",
+        Icon = Icons:GetIcon('package-check', 'Lucide'),
+        Columns = 2,
+    }, "INDEX"),
+}
+
+local groups = {
+    mining = tabs.mine:CreateGroupbox({
+        Name = "Mining",
+        Column = 1,
+    }, "INDEX")
+}
+
+local automine = groups.mining:CreateToggle({
+    Name = "Auto attack ores",
+    CurrentValue = false,
+    Style = 2,
+    Callback = function(Value)
+        vars.automine = Value
     end,
-})
+}, "INDEX")
 
-local Configs = Window:AddTab("Config")
-Config:SetLibrary(Library)
-Config:SetIgnoreIndexes({})
-Config:SetFolder("ryx.wtf/configs/the forge")
-Config:InitSaveSystem(Configs)
+tabs.theme:BuildThemeGroupbox(1)
+Library:LoadAutoloadTheme()
 
 while task.wait() do
     local Candidates = getRocks('Pebble')

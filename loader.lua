@@ -1,4 +1,4 @@
-local Repo = 'https://raw.githubusercontent.com/ryx67/ryx.wtf/main/'
+local Repo = 'https://raw.githubusercontent.com/ryx67/ryx.wtf/master/'
 
 local suc, res = pcall(function()
     return loadstring(game:HttpGet(Repo .. 'games/' .. game.PlaceId .. '.lua'))()
