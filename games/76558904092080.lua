@@ -13,6 +13,8 @@ local lplr = playersService.LocalPlayer
 local vars = {
     tweenspeed = 55,
     automine = true,
+    rocks = 'Pebble',
+    noclip = true,
 }
 
 local npcs = {}
@@ -27,6 +29,11 @@ for i, v in ipairs(npcs) do
     table.insert(npcnames, v.Name)
 end
 
+local shops = {}
+for i, v in ipairs(workspace.Shops:GetChildren()) do
+    table.insert(shops, v)
+end
+
 local function tweenTo(Position)
     local Root = lplr.Character.HumanoidRootPart
     local Pos = Vector3.new(Position.X, Position.Y, Position.Z)
@@ -34,19 +41,18 @@ local function tweenTo(Position)
     local Distance = (Root.Position - Pos).Magnitude
     local Tween = tweenService:Create(
         Root,
-        TweenInfo.new(Distance / vars.tweenspeed, Enum.EasingStyle.Linear),
+        TweenInfo.new(Distance / vars.tweenspeed, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut),
         {
             CFrame = CFrame.new(Pos)
         }
     )
     Tween:Play()
-    Tween.Completed:Wait()
 end
 
 local function Noclip()
     for i, v in pairs(lplr.Character:GetDescendants()) do
         if v:IsA('Part') and v.CanCollide == true then
-            v.CanCollide = false
+            v.CanCollide = vars.noclip
         end
     end
 end
@@ -55,8 +61,8 @@ local function getRocks(Name)
 	for _, i in pairs(workspace.Rocks:GetChildren()) do
 		for _, v in pairs(i:GetChildren()) do
 			if v:IsA('Part') and v:FindFirstChildOfClass('Model') then
-				local Target = v:FindFirstChildOfClass('Model')
-				if Target.Name == Name and Target:FindFirstChild('Hitbox') and Target:GetAttribute('Health') > 0 then
+				local Target = v:FindFirstChild(Name)
+				if Target and Target:FindFirstChild('Hitbox') and Target:GetAttribute('Health') > 0 then
 					return Target.Hitbox
 				end
 			end
@@ -76,21 +82,21 @@ local Window = Library:CreateWindow({
     },
 
     FileSettings = {
-        ConfigFolder = 'MyScript'
+        ConfigFolder = 'ryx.gg'
     },
 })
 
 Window:CreateHomeTab({
-    SupportedExecutors = {'Ronix', 'Delta', 'Codex', 'Xeno', 'Solara'}, 
+    SupportedExecutors = {'Ronix', 'Delta', 'Codex', 'Xeno', 'Solara'},
     UnsupportedExecutors = {},
     DiscordInvite = '1234',
     Backdrop = nil,
     IconStyle = 1, 
     Changelog = {
         {
-            Title = 'Example Update',
-            Date = '25th october twentyfive',
-            Description = 'blablblablajana \n blabakjakd',
+            Title = 'v1.0',
+            Date = '12/8/25',
+            Description = 'Initial Release',
         }
     }
 })
@@ -98,12 +104,13 @@ Window:CreateHomeTab({
 local sections = {
     farm = Window:CreateTabSection('Farming'),
     world = Window:CreateTabSection('Worlds'),
+    misc = Window:CreateTabSection('Miscellaneous'),
     settings = Window:CreateTabSection('Settings')
 }
 
 local tabs = {
     mine = sections.farm:CreateTab({
-        Name = 'Mine',
+        Name = 'Farming',
         Icon = Icons:GetIcon('pickaxe', 'Lucide'),
         Columns = 2,
     }, 'INDEX'),
@@ -111,6 +118,12 @@ local tabs = {
     teleport = sections.world:CreateTab({
         Name = 'Worlds',
         Icon = Icons:GetIcon('map', 'Lucide'),
+        Columns = 2,
+    }, 'INDEX'),
+
+    miscellaneous = sections.misc:CreateTab({
+        Name = 'Miscellaneous',
+        Icon = Icons:GetIcon('cross', 'Lucide'),
         Columns = 2,
     }, 'INDEX'),
 
@@ -135,7 +148,7 @@ local groups = {
 
     mobs = tabs.mine:CreateGroupbox({
         Name = 'Mobs',
-        Column = 1,
+        Column = 2,
     }, 'INDEX'),
 
     npc = tabs.teleport:CreateGroupbox({
@@ -146,6 +159,16 @@ local groups = {
     forge = tabs.teleport:CreateGroupbox({
         Name = 'Forge',
         Column = 2,
+    }, 'INDEX'),
+
+    shop = tabs.teleport:CreateGroupbox({
+        Name = 'Shop',
+        Column = 2,
+    }, 'INDEX'),
+
+    globals = tabs.miscellaneous:CreateGroupbox({
+        Name = 'Globals',
+        Column = 1,
     }, 'INDEX')
 }
 
@@ -155,6 +178,15 @@ local automine = groups.mining:CreateToggle({
     Style = 2,
     Callback = function(Value)
         vars.automine = Value
+    end,
+}, 'INDEX')
+
+local rocks = automine:AddDropdown({
+    Options = {'Pebble', 'Rock', 'Boulder', 'Lucky Block', 'Basalt Rock', 'Basalt Core', 'Basalt Vein', 'Volcanic Rock', 'Earth Crystal', 'Cyan Crystal', 'Crimson Crystal', 'Violet Crystal', 'Light Crystal'},
+    CurrentOptions = {'Pebble'},
+    Placeholder = 'Select Rock',
+    Callback = function(Options)
+        vars.rocks = Options[1]
     end,
 }, 'INDEX')
 
@@ -175,7 +207,7 @@ for i, v in ipairs(npcnames) do
                 tweenTo(Entities.HumanoidRootPart.Position)
             end
         end,
-    }, "INDEX")
+    }, 'INDEX')
 end
 
 groups.forge:CreateButton({
@@ -188,17 +220,60 @@ groups.forge:CreateButton({
                 tweenTo(Forge.CFrames.CrucibleMelt.Position)
             end
         end,
-}, "INDEX")
+}, 'INDEX')
+
+for i, v in ipairs(shops) do
+    if v.Name ~= 'Forging Station' and v.Name ~= 'Model' then
+           groups.shop:CreateButton({
+              Name = v.Name,
+              Icon = Icons:GetIcon('circle-arrow-right', 'Lucide'),
+              Style = 1,
+              Callback = function()
+                tweenTo(v:GetPivot().Position)
+            end,
+        }, 'INDEX')
+    end
+ end
+
+ local tweenspeed = groups.globals:CreateSlider({
+    Name = 'Tween speed',
+    Icon = Icons:GetIcon('speed', 'Material'),
+    Range = {0, 120},
+    Increment = 1,
+    CurrentValue = vars.tweenspeed,
+    Callback = function(Value)
+        vars.tweenspeed = Value
+    end,
+}, 'INDEX')
+
+groups.globals:CreateLabel({
+    Name = 'Info -> 90/91 is RECOMMENDED',
+    Icon = Icons:GetIcon('info', 'Material'),
+}, 'INDEX')
+
+groups.globals:CreateDivider()
+
+local noclip = groups.globals:CreateToggle({
+    Name = 'Noclip when tweening',
+    CurrentValue = true,
+    Style = 2,
+    Callback = function(Value)
+        vars.noclip = Value
+    end,
+}, 'INDEX')
 
 tabs.theme:BuildThemeGroupbox(1)
 Library:LoadAutoloadTheme()
 
 while task.wait() do
-    local Candidates = getRocks('Pebble')
-    if Candidates and vars.automine then
-        tweenTo(getRocks('Pebble').Position)
-        replicatedStorage.Shared.Packages.Knit.Services.ToolService.RF.ToolActivated:InvokeServer('Pickaxe')
-        Noclip()
+    if vars.automine and lplr.Character then
+        local Candidates = getRocks(vars.rocks)
+        if Candidates then
+            tweenTo(Candidates.Position)
+            task.wait(0.2)
+            replicatedStorage.Shared.Packages.Knit.Services.ToolService.RF.ToolActivated:InvokeServer('Pickaxe');
+            Noclip()
+        end
     else
         task.wait(0.16741)
     end
