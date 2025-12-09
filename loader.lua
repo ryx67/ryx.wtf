@@ -1,9 +1,9 @@
-local Repo = 'https://raw.githubusercontent.com/ryx67/ryx.wtf/master/'
+local games = {
+    [76558904092080] = 'https://raw.githubusercontent.com/ryx67/ryx.wtf/refs/heads/main/games/76558904092080.lua',
+}
 
-local suc, res = pcall(function()
-    return loadstring(game:HttpGet(Repo .. 'games/' .. game.PlaceId .. '.lua'))()
-end)
-
-if not suc or res == '404: Not Found' then
-    print('[ryx] -> game not supported')
+for i, v in pairs(games) do
+    if game.GameId == i then
+        loadstring(game:HttpGet(v))()
+    end
 end
