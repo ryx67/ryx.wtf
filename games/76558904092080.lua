@@ -17,42 +17,38 @@ local vars = {
     noclip = true,
 }
 
-info = function(...)
-    print('[ryx - INFO]', ...)
-end
-
-local npcs = {}
+local npcs, npcnames = {}, {}
 for i, v in ipairs(workspace.Proximity:GetChildren()) do
     if v:FindFirstChildOfClass('Humanoid') then
         table.insert(npcs, v)
+        table.insert(npcnames, v.Name)
     end
 end
-info('npc succesfully founded. totals;' .. #npcs)
-
-local npcnames = {}
-for i, v in ipairs(npcs) do
-    table.insert(npcnames, v.Name)
-end
-info('npc names succesfully founded. totals;' .. #npcnames)
 
 local shops = {}
 for i, v in ipairs(workspace.Shops:GetChildren()) do
     table.insert(shops, v)
 end
-info('shop succesfully founded. totals;' .. #shops)
+
+local models, modelsname = {}, {}
+for i, v in ipairs(workspace.Proximity:GetChildren()) do
+    if not v:FindFirstChildOfClass('Humanoid') and v.Name ~= 'Forge' then
+        table.insert(models, v)
+        table.insert(modelsname, v.Name)
+    end
+end
 
 local rocks = {}
 for l, k in pairs(workspace.Rocks:GetChildren()) do
     for i, v in pairs(k:GetChildren()) do
-        local Target = v:FindFirstChildOfClass("Model")
-        if v:IsA("Part") and Target then
+        local Target = v:FindFirstChildOfClass('Model')
+        if v:IsA('Part') and Target then
             if not table.find(rocks, Target.Name) then
                 table.insert(rocks, Target.Name)
             end
         end
     end
 end
-info('rocks succesfully founded. totals;' .. #rocks)
 
 local function tweenTo(Position)
     local Root = lplr.Character.HumanoidRootPart
@@ -180,6 +176,11 @@ local groups = {
         Column = 2,
     }, 'INDEX'),
 
+    others = tabs.teleport:CreateGroupbox({
+        Name = 'Others',
+        Column = 2,
+    }, 'INDEX'),
+
     globals = tabs.miscellaneous:CreateGroupbox({
         Name = 'Globals',
         Column = 1,
@@ -253,8 +254,29 @@ for i, v in ipairs(shops) do
     end
  end
 
- groups.globals:CreateDivider()
- local tweenspeed = groups.globals:CreateSlider({
+ groups.others:CreateDivider()
+ for i, v in ipairs(modelsname) do
+    groups.others:CreateButton({
+        Name = v,
+        Icon = Icons:GetIcon('circle-arrow-right', 'Lucide'),
+        Style = 1,
+        Callback = function()
+            local Entities = nil
+            for _, k in ipairs(models) do
+                if k.Name == v then
+                    Entities = k
+                    break
+                end
+            end
+            if Entities then
+                tweenTo(Entities:GetPivot().Position)
+            end
+        end,
+    }, 'INDEX')
+end
+
+groups.globals:CreateDivider()
+local tweenspeed = groups.globals:CreateSlider({
     Name = 'Tween speed',
     Icon = Icons:GetIcon('speed', 'Material'),
     Range = {0, 120},
