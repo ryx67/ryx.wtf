@@ -3,7 +3,9 @@ local games = {
 }
 
 for i, v in pairs(games) do
-    if game.GameId == i then
+    if game.PlaceId == i then
         loadstring(game:HttpGet(v))()
+    else
+        print('not supported')
     end
 end
