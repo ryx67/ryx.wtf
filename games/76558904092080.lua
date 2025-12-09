@@ -17,22 +17,42 @@ local vars = {
     noclip = true,
 }
 
+info = function(...)
+    print('[ryx - INFO]', ...)
+end
+
 local npcs = {}
 for i, v in ipairs(workspace.Proximity:GetChildren()) do
     if v:FindFirstChildOfClass('Humanoid') then
         table.insert(npcs, v)
     end
 end
+info('npc succesfully founded. totals;' .. #npcs)
 
 local npcnames = {}
 for i, v in ipairs(npcs) do
     table.insert(npcnames, v.Name)
 end
+info('npc names succesfully founded. totals;' .. #npcnames)
 
 local shops = {}
 for i, v in ipairs(workspace.Shops:GetChildren()) do
     table.insert(shops, v)
 end
+info('shop succesfully founded. totals;' .. #shops)
+
+local rocks = {}
+for l, k in pairs(workspace.Rocks:GetChildren()) do
+    for i, v in pairs(k:GetChildren()) do
+        local Target = v:FindFirstChildOfClass("Model")
+        if v:IsA("Part") and Target then
+            if not table.find(rocks, Target.Name) then
+                table.insert(rocks, Target.Name)
+            end
+        end
+    end
+end
+info('rocks succesfully founded. totals;' .. #rocks)
 
 local function tweenTo(Position)
     local Root = lplr.Character.HumanoidRootPart
@@ -49,7 +69,7 @@ local function tweenTo(Position)
     Tween:Play()
 end
 
-local function Noclip()
+local function noClip()
     for i, v in pairs(lplr.Character:GetDescendants()) do
         if v:IsA('Part') and v.CanCollide == true then
             v.CanCollide = vars.noclip
@@ -127,15 +147,9 @@ local tabs = {
         Columns = 2,
     }, 'INDEX'),
 
-    theme = sections.settings:CreateTab({
-        Name = 'Theme',
+    settings = sections.settings:CreateTab({
+        Name = 'Settings',
         Icon = Icons:GetIcon('palette', 'Lucide'),
-        Columns = 2,
-    }, 'INDEX'),
-
-    config = sections.settings:CreateTab({
-        Name = 'Config',
-        Icon = Icons:GetIcon('package-check', 'Lucide'),
         Columns = 2,
     }, 'INDEX'),
 }
@@ -183,8 +197,8 @@ local automine = groups.mining:CreateToggle({
 }, 'INDEX')
 
 local rocks = automine:AddDropdown({
-    Options = {'Pebble', 'Rock', 'Boulder', 'Lucky Block', 'Basalt Rock', 'Basalt Core', 'Basalt Vein', 'Volcanic Rock', 'Earth Crystal', 'Cyan Crystal', 'Crimson Crystal', 'Violet Crystal', 'Light Crystal'},
-    CurrentOptions = {'Pebble'},
+    Options = rocks,
+    CurrentOptions = rocks[1],
     Placeholder = 'Select Rock',
     Callback = function(Options)
         vars.rocks = Options[1]
@@ -251,10 +265,12 @@ for i, v in ipairs(shops) do
     end,
 }, 'INDEX')
 
-groups.globals:CreateLabel({
-    Name = '-> 90/91 is RECOMMENDED',
+local tweeninfoo = groups.globals:CreateParagraph({
+    Name = "Information",
+    Content = "60 ~ 70 is reccomended for optimal performance.",
     Icon = Icons:GetIcon('info', 'Material'),
-}, 'INDEX')
+
+}, "INDEX")
 
 local noclip = groups.globals:CreateToggle({
     Name = 'Noclip when tweening',
@@ -265,17 +281,18 @@ local noclip = groups.globals:CreateToggle({
     end,
 }, 'INDEX')
 
-tabs.theme:BuildThemeGroupbox(1)
+tabs.settings:BuildThemeGroupbox(1)
+tabs.settings:BuildConfigGroupbox(2)
 Library:LoadAutoloadTheme()
+Library:SetTheme('BBot')
 
 while task.wait() do
     if vars.automine and lplr.Character then
         local Candidates = getRocks(vars.rocks)
         if Candidates then
             tweenTo(Candidates.Position)
-            task.wait(0.2)
             replicatedStorage.Shared.Packages.Knit.Services.ToolService.RF.ToolActivated:InvokeServer('Pickaxe');
-            Noclip()
+            noClip()
         end
     else
         task.wait(0.16741)
