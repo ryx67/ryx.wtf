@@ -288,11 +288,11 @@ local tweenspeed = groups.globals:CreateSlider({
 }, 'INDEX')
 
 local tweeninfoo = groups.globals:CreateParagraph({
-    Name = "Information",
-    Content = "60 ~ 70 is reccomended for optimal performance.",
+    Name = 'Information',
+    Content = '60 ~ 70 is reccomended for optimal performance.',
     Icon = Icons:GetIcon('info', 'Material'),
 
-}, "INDEX")
+}, 'INDEX')
 
 local noclip = groups.globals:CreateToggle({
     Name = 'Noclip when tweening',
